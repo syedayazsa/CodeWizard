@@ -59,7 +59,7 @@ The project is divided into three main components:
    - Formats prompts, handles authentication, caching, and error management.
 
 Below is a high-level diagram of the system:
-![Description of the image](misc/codewizard.svg)
+![CodeWizard Architecture](.misc/codewizard.svg)
 ---
 
 ## Functional Requirements
