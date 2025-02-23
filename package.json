@@ -1,0 +1,23 @@
+{
+  "name": "codewizard",
+  "version": "1.0.0",
+  "description": "CodeWizard is a Visual Studio Code extension that leverages a custom Language Server Protocol (LSP) server and an optional middleware API to integrate large language model (LLM) functionalities directly into your editor. This project enables advanced features such as dynamic code completion, hover-based explanations, and context-aware code actions by querying external LLM providers.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/syedayazsa/CodeWizard.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/syedayazsa/CodeWizard/issues"
+  },
+  "homepage": "https://github.com/syedayazsa/CodeWizard#readme",
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
