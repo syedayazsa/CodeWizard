@@ -1,4 +1,4 @@
-# CodeWizard
+# 🧙‍♂️ CodeWizard
 
 CodeWizard is a Visual Studio Code extension that leverages a custom Language Server Protocol (LSP) server and an optional middleware API to integrate large language model (LLM) functionalities directly into your editor. This project enables advanced features such as dynamic code completion, hover-based explanations, and context-aware code actions by querying external LLM providers.
 
@@ -54,7 +54,7 @@ The project is divided into three main components:
    - Handles document synchronization, code completion, hover, and code actions.
    - Uses the `TextDocuments` manager to maintain up-to-date file contents.
   
-3. **Middleware API (Optional):**  
+3. **Middleware API (Optional):**   
    - A lightweight Express-based API that bridges the language server and external LLM providers.
    - Formats prompts, handles authentication, caching, and error management.
 
