@@ -1,0 +1,28 @@
+{
+  "name": "extension",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "package": "vsce package",
+    "install": "echo 'No postinstall needed' "
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:typescript"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.13.5",
+    "@types/vscode": "^1.97.0",
+    "typescript": "^5.7.3",
+    "vsce": "^2.15.0",
+    "vscode-languageclient": "^9.0.1"
+  }
+}
