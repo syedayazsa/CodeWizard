@@ -25,7 +25,7 @@ CodeWizard is a Visual Studio Code extension that leverages a custom Language Se
 
 ## Overview
 
-CodeWizard is an open source VS Code extension designed to empower developers with LLM-powered capabilities during software development. By integrating a custom language server with VS Code’s Language Client, the extension provides real-time code completions, detailed hover information, and context-aware code actions by querying external LLM services via a middleware API. The project is implemented entirely in TypeScript and adheres to modern software engineering practices.
+CodeWizard is an open source VS Code extension designed to empower developers with LLM-powered capabilities during software development. By integrating a custom language server with VS Code's Language Client, the extension provides real-time code completions, detailed hover information, and context-aware code actions by querying external LLM services via a middleware API. The project is implemented entirely in TypeScript and adheres to modern software engineering practices.
 
 ---
 
@@ -43,22 +43,31 @@ CodeWizard is an open source VS Code extension designed to empower developers wi
 
 ## Architecture
 
-The project is divided into three main components:
+The diagram depicts three main components in the architecture:
 
-1. **VS Code Client (Extension):**  
-   - Acts as the language client using the `vscode-languageclient` library.
-   - Manages extension activation, configuration, and user interface integration.
-  
-2. **Custom Language Server (LSP Server):**  
-   - Built with the `vscode-languageserver` library.
-   - Handles document synchronization, code completion, hover, and code actions.
-   - Uses the `TextDocuments` manager to maintain up-to-date file contents.
-  
-3. **Middleware API (Optional):**   
-   - A lightweight Express-based API that bridges the language server and external LLM providers.
-   - Formats prompts, handles authentication, caching, and error management.
+1. **VS Code Client (Extension)**
+    - This is a standard VS Code extension that users install.
+    - Inside the extension, there is a "Language Client" that starts up and communicates with the custom language server.
+    - The extension can also have UI components such as command palette items, a webview, or a status bar.
+    - Developers configure credentials and LLM settings here.
 
-Below is a high-level diagram of the system:
+2. **Custom Language Server**
+    - The Language Server implements the [Language Server Protocol (LSP)](https://microsoft.github.io/language-server-protocol/) in TypeScript.
+    - It manages document synchronization (opening, closing, changes) and has specialized handlers for:
+        - **OnCompletion**: Provide code completion suggestions (e.g., from an LLM).
+        - **OnHover**: Return code explanations or docstrings.
+        - **OnCodeAction**: For generating tests, refactoring suggestions, etc.
+        - **Diagnostics**: If the LLM can identify potential issues, it can be reported as diagnostics.
+    - The server also does runtime logging, parsing the code (possibly using an AST or text-based parsing) before sending queries to the LLM.
+3. **Middleware API**
+    - This layer is effectively an **Express API Gateway** that your language server calls.
+    - Responsibilities include:
+        - **Prompt Engineering**: Combining user input + context from the code to craft the final LLM prompt.
+        - **Rate Limiting**: Avoid flooding your LLM provider with too many requests.
+        - **Security / Auth**: If you need to handle tokens or credentials.
+    - The LLM itself can be an external service (OpenAI, Anthropic, etc).
+
+Below is a high-level diagram of the system
 ![CodeWizard Architecture](./misc/codewizard.png)
 ---
 
@@ -123,18 +132,18 @@ Below is a high-level diagram of the system:
 - **npm** or **Yarn**
 - **Visual Studio Code** (latest stable release)
 
-### Client (VS Code Extension)
+### Installation Steps
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/llm-code-assistant.git
-   cd llm-code-assistant/client
+   git clone https://github.com/syedayazsa/CodeWizard.git
+   cd CodeWizard
    ```
 2. Install dependencies:
    ```bash
    npm install
    ```
-3. Build the extension:
+3. Build all packages:
    ```bash
    npm run build
    ```
@@ -186,27 +195,24 @@ These settings are automatically passed from the language client to the language
 ### Project Structure
 
 ```
-/llm-code-assistant
-  /client         // VS Code extension (Language Client)
-    ├── src/
-    │    ├── extension.ts
-    │    └── ui/ (optional)
-    ├── package.json
-    └── tsconfig.json
-  /server         // Custom Language Server (LSP Server)
-    ├── src/
-    │    ├── setup.ts
-    │    ├── completion.ts
-    │    └── index.ts
-    ├── package.json
-    └── tsconfig.json
-  /middleware     // Middleware API for LLM queries (optional)
-    ├── src/
-    │    └── apiClient.ts
-    ├── package.json
-    └── tsconfig.json
-  package.json   // Root-level configuration if using monorepo/workspaces
-  tsconfig.base.json
+/CodeWizard
+  /packages
+    /extension       // VS Code extension (Language Client)
+      ├── src/
+      │    └── extension.ts
+      ├── package.json
+      └── tsconfig.json
+    /language-server // Language Server (LSP Server)
+      ├── src/
+      │    └── server.ts
+      ├── package.json
+      └── tsconfig.json
+    /middleware-api  // Middleware API for LLM queries
+      ├── src/
+      │    └── index.ts
+      ├── package.json
+      └── tsconfig.json
+  package.json      // Root-level configuration with workspaces
 ```
 
 ### Building the Extension
@@ -224,10 +230,10 @@ If using Yarn workspaces, a root-level build script can coordinate building all 
 ### Testing and Debugging
 
 - **Unit Tests:**  
-  Write unit tests using Jest or Mocha in each package’s test directory.
+  Write unit tests using Jest or Mocha in each package's test directory.
   
 - **Integration Tests:**  
-  Use VS Code’s Extension Development Host to launch and interact with your extension.
+  Use VS Code's Extension Development Host to launch and interact with your extension.
   
 - **Debugging:**  
   Use a `.vscode/launch.json` configuration in the client package to start the extension in debug mode.
@@ -238,7 +244,7 @@ If using Yarn workspaces, a root-level build script can coordinate building all 
 
 Contributions are welcome! Please follow these guidelines:
 - Fork the repository and create a feature branch.
-- Ensure all code is written in TypeScript and follows the project’s coding standards.
+- Ensure all code is written in TypeScript and follows the project's coding standards.
 - Write unit and integration tests for new features.
 - Update documentation and the CHANGELOG as needed.
 - Submit a pull request describing your changes.
